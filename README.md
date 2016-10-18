@@ -113,17 +113,79 @@ Human.where({ fname: "Matt", house_id: 1 })
 An association class method defines a method on the class that calls it. This new method represents an association with another table and returns one or more new objects.
 \*The `:primary_key`, `:foreign_key`, and `:class_name` options are all inferred by SQLObject. These can be overridden if the inferences are incorrect.
 
-##### has_one
+##### belongs_to
+Used for a class that holds the foreign_key in an association
 
 ```Ruby
 class Laptop < SQLObject
-  belongs_to :owner, class_name: :Human
+  belongs_to :owner,
+    class_name: :Human,
+    foreign_key: :owner_id,
+    primary_key: :id
 
   finalize!
 end
 
-macbook = Laptop.find(1)
+laptop = Laptop.find(2)
+owner = laptop.owner
+# => #<Human:0x007f9ba1c861f0 @attributes={:id=>4, :fname=>"Hazel", :lname=>"Peters"}>
 
-macbook.owner
-# => #<Human:0x007f9ba @attributes={:id=>2, :fname=>"Matt", :lname=>"Rubens"}>
+laptop.owner_id == owner
+# => true
+```
+
+##### has_one
+Used for a class whose primary key is stored as the foreign_key of another object
+
+```Ruby
+class Human < SQLObject
+  has_one :house
+
+  finalize!
+end
+
+human = Human.find(1)
+human.house
+# => #<House:0x007f9ba @attributes={:id=>7, :address=>"999 North 5th"}>
+```
+
+##### has_many
+Used for a class whose primary key is stored as the foreign_key of multiple other objects that share a class
+
+```Ruby
+class Human < SQLObject
+  has_many :cats, foreign_key: :owner_id
+
+  finalize!
+end
+
+human = Human.find(1)
+human.cats
+# => [#<Cat:0x007f9ba1667710 @attributes={:id=>9, :name=>"Supper", :owner_id=>1}>,
+ #<Cat:0x007f9ba1667558 @attributes={:id=>14, :name=>"Grapejuice", :owner_id=>1}>]
+```
+
+##### has_one_through
+Used for a class that has a secondary association to another class
+
+```Ruby
+class House < SQLObject
+  has_many :dwellers, class_name: :human
+
+  finalize!
+end
+
+class Human < SQLObject
+  belongs_to :house
+
+  finalize!
+end
+
+class Dog < SQLObject
+  belongs_to :owner, class_name: :Human
+  has_one_through :house, :owner, :house
+
+  finalize!
+end
+
 ```
