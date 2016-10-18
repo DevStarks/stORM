@@ -2,6 +2,15 @@ require_relative 'assoc_options'
 
 module Associatable
 
+  def has_one(name, options = {})
+    options = HasOptions.new(name, self.to_s, options)
+
+    define_method(name) do
+      model_class = options.model_class
+      model_class.where({options.foreign_key => id})[0]
+    end
+  end
+
   def belongs_to(name, options = {})
     options = BelongsToOptions.new(name, options)
 
@@ -15,7 +24,7 @@ module Associatable
   end
 
   def has_many(name, options = {})
-    options = HasManyOptions.new(name, self.to_s, options)
+    options = HasOptions.new(name, self.to_s, options)
 
     define_method(name) do
       model_class = options.model_class
@@ -28,7 +37,6 @@ module Associatable
   end
 
   def has_one_through(name, through_name, source_name)
-
     define_method(name) do
       through_options = self.class.assoc_options[through_name]
       source_options = through_options.model_class.assoc_options[source_name]
