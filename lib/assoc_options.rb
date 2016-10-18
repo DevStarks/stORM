@@ -6,7 +6,7 @@ class AssocOptions
   attr_accessor :foreign_key, :class_name, :primary_key
 
   def model_class
-    class_name.constantize
+    ActiveSupport::Inflector.constantize(class_name)
   end
 
   def table_name

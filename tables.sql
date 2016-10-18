@@ -1,4 +1,4 @@
-CREATE TABLE turtle (
+CREATE TABLE turtles (
   id INTEGER PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
   owner_id INTEGER,
@@ -25,7 +25,7 @@ INSERT INTO
 VALUES
   (1, "10000 Penn Ave"),
   (2, "543 Main st."),
-  (2, "600 Wahington st.")
+  (3, "600 Wahington st.");
 
 
 INSERT INTO

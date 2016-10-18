@@ -1,5 +1,5 @@
 source "https://rubygems.org"
 
-gem 'activesupport', '~> 4.2'
+gem 'activesupport'
 gem 'sqlite3'
 gem 'byebug'

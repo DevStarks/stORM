@@ -44,6 +44,51 @@ earl.human
 # => #<Human:0x007f9ba @attributes={:id=>2, :fname=>"Matt", :lname=>"Rubens"}>
 ```
 
+## Demo
+To try out stORM, run the following command from within this directory:
+
+```Ruby
+irb -r ./demo.rb
+```  
+These are the defined associations:
+```Ruby
+class Turtle < SQLObject
+  belongs_to :owner, class_name: :human
+  has_one_through :house, :owner, :house
+end
+
+class Human < SQLObject
+  belongs_to :house
+  has_many :turtles
+end
+
+class House < SQLObject
+  has_many :inhabitants, class_name: :human
+end
+```
+...and the database schema:
+###### turtles
+column name     | data type | details
+----------------|-----------|-----------------------
+id              | integer   | primary key
+name            | string    |
+owner_id        | integer   | foreign key
+
+###### humans
+column name     | data type | details
+----------------|-----------|-----------------------
+id              | integer   | primary key
+fname           | string    |
+lname           | string    |
+house_id        | integer   | foreign key
+
+###### houses
+column name     | data type | details
+----------------|-----------|-----------------------
+id              | integer   | primary key
+address         | string    |
+
+
 ## Docs
 
 #### General Methods
