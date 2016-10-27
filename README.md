@@ -4,9 +4,9 @@
 stORM is an Object-Relational Mapping library inspired by ActiveRecord. stORM provides a base class `SQLObject` that, when inherited from, allows Ruby classes to easily query their related database table and return Ruby objects representing that data. These database-connected subclasses can be mapped to each other using associations.
 
 #### Features
-- a simple interface for generating SQL queries
-- cross table referencing for object associations
-- infers table-names, primary-keys, and foreign-keys when making associations resulting in elegant method calls
+- A simple interface for generating SQL queries
+- Cross table referencing for object associations
+- Infers table-names, primary-keys, and foreign-keys when making associations resulting in elegant method calls
 
 #### General usage:
 
@@ -18,13 +18,13 @@ end
 ```
 
 SQLObjects can query the database:
-- returns all objects from the respective table
+- Returns all objects from the respective table
 ```Ruby
 Cat.all
 # => [[#<Cat:0x007f @attributes={:id=>1, :name=>"Breakfast"}>,
  #<Cat:0x007f @attributes={:id=>2, :name=>"Earl"}>,]
  ```
-- queries using any object attribute
+- Queries using any object attribute
 ```Ruby
  Cat.where({name: "Earl"})
  # => [#<Cat:0x007f @attributes={:id=>2, :name=>"Earl">]
