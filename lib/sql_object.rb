@@ -3,7 +3,6 @@ require_relative 'searchable'
 require_relative 'associatable'
 require 'active_support/inflector'
 
-
 class SQLObject
   extend Searchable, Associatable
 
@@ -123,3 +122,9 @@ class SQLObject
     self.class.table_name
   end
 end
+
+# calls finalize! on a SQLObject classes at time of definition
+TracePoint.new(:end) do |tp|
+  klass = tp.binding.receiver
+  klass.finalize! if klass.respond_to?(:finalize!)
+end.enable

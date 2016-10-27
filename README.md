@@ -10,10 +10,10 @@ stORM is an Object-Relational Mapping library inspired by ActiveRecord. stORM pr
 
 #### General usage:
 
-Mapped classes inherit from `SQLObject` and call finalize! to generate getters and setters for object attributes:
+Mapped classes inherit from `SQLObject`:
+
 ```Ruby
 class Cat < SQLObject
-  finalize!
 end
 ```
 
@@ -34,8 +34,6 @@ Associations can be defined between SQLObjects:
 ```Ruby
 class Cat < SQLObject
   belongs_to :human, foreign_key: :owner_id
-
-  finalize!
 end
 
 earl = Cat.where({name: "Earl"})
@@ -59,11 +57,17 @@ end
 
 class Human < SQLObject
   belongs_to :house
-  has_many :turtles
+  has_many :turtles, foreign_key: :owner_id
+  has_one_through :neighborhood, :house, :neighborhood
 end
 
 class House < SQLObject
-  has_many :inhabitants, class_name: :human
+  has_many :inhabitants, class_name: "Human"
+  belongs_to :neighborhood
+end
+
+class Neighborhood < SQLObject
+  has_many :houses, class_name: "House"
 end
 ```
 ...and the database schema:
@@ -87,6 +91,13 @@ column name     | data type | details
 ----------------|-----------|-----------------------
 id              | integer   | primary key
 address         | string    |
+neighborhood_id | integer   | foreign_key
+
+#### neighborhoods
+column name     | data type | details
+----------------|-----------|-----------------------
+id              | integer   | primary key
+name            | string    |
 
 
 ## Docs
@@ -99,9 +110,6 @@ Returns an array of the related table's column names
 Human.columns
 # => [:id, :fname, :lname, :house_id]
 ```
-
-##### finalize!
-Defines getter and setter instance methods for all attributes. Must be called to enable querying and associations
 
 ##### table_name
 Returns the inferred name for the related table. Can be set with `table_name=` if incorrect
@@ -167,8 +175,6 @@ class Laptop < SQLObject
     class_name: :Human,
     foreign_key: :owner_id,
     primary_key: :id
-
-  finalize!
 end
 
 laptop = Laptop.find(2)
@@ -185,8 +191,6 @@ Used for a class whose primary key is stored as the foreign_key of another objec
 ```Ruby
 class Human < SQLObject
   has_one :house
-
-  finalize!
 end
 
 human = Human.find(1)
@@ -200,8 +204,6 @@ Used for a class whose primary key is stored as the foreign_key of multiple othe
 ```Ruby
 class Human < SQLObject
   has_many :cats, foreign_key: :owner_id
-
-  finalize!
 end
 
 human = Human.find(1)
@@ -216,21 +218,15 @@ Used for a class that has a secondary association to another class
 ```Ruby
 class House < SQLObject
   has_many :dwellers, class_name: :human
-
-  finalize!
 end
 
 class Human < SQLObject
   belongs_to :house
-
-  finalize!
 end
 
 class Dog < SQLObject
   belongs_to :owner, class_name: :Human
   has_one_through :house, :owner, :house
-
-  finalize!
 end
 
 ```

@@ -1,5 +1,6 @@
 require_relative 'assoc_options'
 
+
 module Associatable
 
   def has_one(name, options = {})
