@@ -67,14 +67,14 @@ class House < SQLObject
 end
 ```
 ...and the database schema:
-##### turtles
+#### turtles
 column name     | data type | details
 ----------------|-----------|-----------------------
 id              | integer   | primary key
 name            | string    |
 owner_id        | integer   | foreign key
 
-##### humans
+#### humans
 column name     | data type | details
 ----------------|-----------|-----------------------
 id              | integer   | primary key
@@ -82,7 +82,7 @@ fname           | string    |
 lname           | string    |
 house_id        | integer   | foreign key
 
-##### houses
+#### houses
 column name     | data type | details
 ----------------|-----------|-----------------------
 id              | integer   | primary key
